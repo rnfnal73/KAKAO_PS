@@ -1,0 +1,31 @@
+from collections import Counter
+from itertools import combinations
+def solution(relation):
+    entirekey = [x for i in range(1,len(relation[0]) + 1) for x in combinations(list(range(len(relation[0]))),i)]
+    print(entirekey)
+    superkey = []
+    for key in entirekey:
+        records_tmp = []
+        for col in range(len(relation)):
+            s_tmp = ""
+            for x in key:
+                s_tmp += relation[col][x]
+            records_tmp.append(s_tmp)
+        if len(set(records_tmp)) == len(records_tmp):
+            superkey.append(key)
+    candidkey = []
+    superkey.sort(key = lambda x : len(x))
+    #앞에 있는 키의 모든 요소가 뒤에있는 요소에 포함될때 => 후보키가 아님
+    while superkey:
+        tmp = superkey.pop(0)
+        candidkey.append(tmp)
+        tmp_key = superkey[:]
+        for key in superkey:
+            count = 0
+            for x in tmp:
+                if x in key:
+                    count += 1
+            if count == len(tmp):
+                tmp_key.remove(key)
+        superkey = tmp_key
+    return len(candidkey)
