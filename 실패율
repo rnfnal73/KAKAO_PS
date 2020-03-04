@@ -1,0 +1,21 @@
+from collections import Counter
+def solution(n, stages):
+    stages = Counter(stages)
+    number_set = sorted(list(set(stages)))
+    number_people = [stages[i] for i in number_set]
+    result = []
+    for x in range(1,n):
+        if x not in number_set:
+            result.append([0,x])
+        else:
+            result.append([number_people[number_set.index(x)]/sum(number_people[number_set.index(x):]),x])
+    if n in number_set:
+        if n+1 in number_set:
+            result.append([number_people[len(number_set) - 2]/(number_people[len(number_set) - 2]+number_people[len(number_set) - 1]), int(n)])
+        else:
+            result.append([1,n])
+    else:
+        result.append([0,n])
+    result.sort(key = lambda x : x[1])
+    result.sort(key = lambda x : x[0],reverse = True)
+    return [x[1] for x in result]
