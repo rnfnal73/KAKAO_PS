@@ -1,0 +1,24 @@
+def binary(n,decimal):
+    result = []
+    while True:
+        q, r = divmod(decimal, 2)
+        if q >= 2:
+            result = [r] + result
+            decimal = q
+        else:
+            result = [q, r] + result
+            break
+    if len(result) != n:
+        result = [0] * (n - len(result)) + result
+    return result
+def solution(n, arr1, arr2):
+    decoded = []
+    for x, y in zip(arr1, arr2):
+        tmp = ""
+        for i, j in zip(binary(n,x), binary(n,y)):
+            if i or j:
+                tmp += '#'
+            else:
+                tmp += ' '
+        decoded.append(tmp)
+    return decoded
