@@ -1,0 +1,21 @@
+def solution(record):
+    result = []
+    users = {}
+    for item in record:
+        tmp = item.split(' ')
+        if tmp[0] == 'Enter':
+            if tmp[1] not in users:
+                users[tmp[1]] = tmp[2]
+            else:
+                if users[tmp[1]] != tmp[2]:
+                    users[tmp[1]] = tmp[2]
+        elif tmp[0] == 'Change':
+            users[tmp[1]] = tmp[2]
+        result.append([tmp[0],tmp[1]])
+    returns = []
+    for item in result:
+        if item[0] == 'Enter':
+            returns.append(users[item[1]] + "님이 들어왔습니다.")
+        elif item[0] == 'Leave':
+            returns.append(users[item[1]] + "님이 나갔습니다.")
+    return returns
