@@ -1,0 +1,25 @@
+def solution(msg):
+    msg = list(msg)
+    a = ord('A')
+    dic = [chr(a + i) for i in range(26)]
+    idx = -2
+    result = []
+    tmp_str = ""
+    while True:
+        if len(msg) == 1:
+            if tmp_str + msg[0] in dic:
+                result.append(dic.index(tmp_str + msg[0]) + 1)
+            elif tmp_str + msg[0] not in dic:
+                result.append(idx)
+                result.append(dic.index(msg.pop(0)) + 1)
+            break
+        else:
+            if tmp_str + msg[0] in dic:
+                tmp_str += msg.pop(0)
+                idx = dic.index(tmp_str) + 1
+            elif tmp_str + msg[0] not in dic:
+                dic.append(tmp_str + msg[0])
+                result.append(idx)
+                tmp_str = ""
+                idx = -2
+    return result
