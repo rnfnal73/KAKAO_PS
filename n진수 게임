@@ -1,0 +1,31 @@
+def to_number(number,radix):
+    rtn_value = ""
+    while True:
+        q,r = divmod(number,radix)
+        if r >= 10:
+            base = ord('A')
+            r = str(chr(base + (r - 10)))
+        if q < radix:
+            if q == 0:
+                return str(r) + rtn_value
+            else:
+                return str(q) + str(r) + rtn_value
+        else:
+            rtn_value = str(r) + rtn_value
+            number = q
+def solution(n, t, m, p):# n = 진법, t = 미리 구할 숫자의 갯수, m = 게임에 참여하는 인원, p = 튜브의 순서
+    #p는 0부터 p - 1 까지, [:p] = 0~p-1, [p:m] = p~m-1
+    count = t
+    result = ""
+    number_arr = ""
+    number = 0
+    while count != 0:
+        while len(number_arr) < m:
+            number_arr += to_number(number,n)
+            number += 1
+        finding_value  = number_arr[p-1]
+        result += finding_value
+        count -= 1
+        number_arr = number_arr[m:]
+    return result
+#아직 틀린 풀이
