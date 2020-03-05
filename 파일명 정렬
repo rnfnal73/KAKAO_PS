@@ -1,0 +1,18 @@
+import re
+def divide(name):
+    regexp = re.compile('[0-9]{1,5}')
+    m = regexp.search(name)
+    #tmp_str = list(name)
+    start = m.start()
+    end = m.end()
+    return name[:start],name[start:end],name[end:]
+
+def solution(files):
+    divided = []
+    for file in files:
+        (head,number,tail) = divide(file)
+        divided.append([head,number,tail])
+    divided.sort(key = lambda x : int(x[1]))
+    divided.sort(key = lambda x : x[0].lower())
+    divided = [''.join(x) for x in divided]
+    return divided
