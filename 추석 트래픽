@@ -1,0 +1,71 @@
+# 입력 str을 [완료시간,소요시간]으로 분할 => [[시작시간,완료시간]...] 으로 분할, 시간,분,초 단위까지 계산
+# 시작,완료시간으로 어느 시간,분,초 단위에 속하는지 계산
+# 여러 시간대에 겹치는경우, 한 시간대에만 속하는 경우를 나눠서 dictionary에 추가
+# collections.Counter().values() 중 가장 큰 값을 반환
+import re
+import collections
+def divide_into_sec(start,end,taken):
+    #taken -= 1
+    tmp_start = start
+    result = []
+    while True:
+        tmp = 1.0 - (tmp_start[2] - int(tmp_start[2]))
+        if tmp > taken:
+            if int(tmp_start[2]) ==60:
+                if int(tmp_start[1]) + 1 == 60:
+                    result.append([str(tmp_start[0] + 1), str(0),str(0)])
+                else:
+                    result.append([str(tmp_start[0]), str((tmp_start[1] + 1)), str(0)])
+            else:
+                result.append([str(tmp_start[0]),str(tmp_start[1]),str(int(tmp_start[2]))])
+            break
+        elif tmp == taken:
+            result.append([str(tmp_start[0]), str(tmp_start[1]),str(int(tmp_start[2]))])
+            if int(tmp_start[2])+1 == 60:
+                if tmp_start[1]+1 == 60:
+                    result.append([str(tmp_start[0] + 1), str(0), str(0)])
+                else:
+                    result.append([str(tmp_start[0]), str(tmp_start[1]+1), str(0)])
+            break
+        elif tmp < taken:
+            taken -= tmp
+            if int(tmp_start[2]) == 60:
+                if int(tmp_start[1]) + 1 == 60:
+                    result.append([str(tmp_start[0] + 1), str(0), str(0)])
+                    tmp_start = [tmp_start[0] + 1, 0, 1]
+                else:
+                    result.append([str(tmp_start[0]), str(tmp_start[1] + 1), str(0)])
+                    tmp_start = [tmp_start[0], tmp_start[1] + 1, 1]
+            else:
+                result.append([str(tmp_start[0]),str(tmp_start[1]),str(int(tmp_start[2]))])
+                tmp_start = [tmp_start[0],tmp_start[1],int(tmp_start[2]) + 1]
+    return result
+#print(divide_into_sec([20, 59, 58.999], [21, 0, 0.464], 1.466))
+def cal_time(tmp):
+    complete = tmp[0] # 시,분,초
+    taken = tmp[1]    # 0.001 <= <= 3.000
+    tmp_sec = complete[2] - tmp[1] + 0.001
+    tmp_min = complete[1]
+    tmp_hr  = complete[0]
+    if tmp_sec < 0:
+        tmp_sec += 60.0
+        tmp_min -= 1
+        if tmp_min < 0:
+            tmp_min += 60
+            tmp_hr  -= 1
+    return [[tmp_hr,tmp_min,tmp_sec],complete,taken]
+def solution(lines):
+    tmp_lines = []
+    result = []
+    regexp = re.compile(':')
+    for line in lines:
+        complete, taken = line[11:].split(' ')
+        tmp = regexp.split(complete)
+        complete = [int(tmp[0]),int(tmp[1]),float(tmp[2])]
+        taken = float(taken[:len(taken) - 1])
+        tmp_lines.append(cal_time([complete,taken]))
+    for item in tmp_lines:
+        result += divide_into_sec(item[0],item[1],item[2])
+    result = [''.join(x) for x in result]
+    return max(collections.Counter(result).values())
+#아직 틀린 풀이
