@@ -1,0 +1,58 @@
+# 배열을 탐색하면서 2x2 정사각형인 블럭이 있는지 확인
+# 가능한 블럭을 제거하고 빈부분은 위에서부터 채워줌
+# 모든 reverse된 라인들에 대해 값이 0인 칸이 있다면 윗줄들을 확인해 내려줌
+# 나머지 부분을 0으로 채워주고 반복
+# 마지막에 0의 개수를 세서 return
+
+def check(board,m,n,i,j,visited):
+    if i < m-1 and j < n-1 and board[i][j] == board[i][j+1] and board[i+1][j] == board[i][j+1] and board[i][j] == board[i+1][j+1]:
+        result = []
+        tmp1 = []
+        tmp2 = []
+        tmp3 = []
+        visited.append((i,j))
+        for x in range(2):
+            for y in range(2):
+                result.append((i+x,j+y))
+        if (i+1,j) not in visited:
+            tmp1 = check(board,m,n,i+1,j,visited)
+        if (i,j+1) not in visited:
+            tmp2 = check(board,m,n,i,j+1,visited)
+        if (i+1,j+1) not in visited:
+            tmp3 = check(board,m,n,i+1,j+1,visited)
+        return list(set(result + tmp1 + tmp2 + tmp3))
+    else:
+        return [(0,)]
+
+def down(board,m,n):
+    board = [list(x) for x in board]
+    for i in range(m-1,-1,-1):
+        for j in range(n):
+            if board[i][j] == '0':
+                for k in range(i-1,-1,-1):
+                    if board[k][j] != '0':
+                        board[k][j], board[i][j] = board[i][j], board[k][j]
+                        break
+    return board
+
+def solution(m, n, board):
+    board = [list(x) for x in board]
+    blocks = 0
+    while True:
+        tmp_blocks = 0
+        visited = []
+        result = []
+        for i in range(m-1):
+            for j in range(n-1):
+                if board[i][j] != '0':
+                    result += check(board,m,n,i,j,visited)
+        result = list(set(result))
+        for item in result:
+            if  item != (0,):
+                board[item[0]][item[1]] = '0'
+                tmp_blocks += 1
+        if tmp_blocks == 0:
+            break
+        blocks += tmp_blocks
+        board = down(board,m,n)
+    return blocks
