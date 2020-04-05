@@ -1,0 +1,23 @@
+def solution(board, moves):
+    stack = []
+    tmp = -1
+    row = len(board)
+    count = 0
+    for column in moves:
+        for i in range(row):
+            if board[i][column-1] != 0:
+                tmp = board[i][column-1]
+                #스택이 비어있으면
+                if not stack:
+                    stack.append(tmp)
+                else:
+                    if stack[-1] != 0 and stack[-1] == tmp:
+                        count += 1
+                        stack.pop()
+                    else:
+                        stack.append(tmp)
+                board[i][column-1] = 0
+                break
+            else:
+                continue
+    return count*2
