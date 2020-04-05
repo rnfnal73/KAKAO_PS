@@ -1,0 +1,37 @@
+import re
+def recur(result,tmp_result,banned_id):
+    if not banned_id:
+        result.append(tuple(tmp_result))
+        return 0
+    else:
+        for x in banned_id[0]:
+            if x not in tmp_result:
+                #return recur(result + x, banned_id[1:])
+                recur(result,tmp_result + [x], banned_id[1:])
+    return result
+def solution(user_id, banned_id):
+    #user_id = ['abc','adc','aw']
+    #banned_id = ['***','**','***']
+    tmp_banned = []
+    #banned_id를 정규표현식으로 바꾸는 과정
+    for _id in banned_id:
+        tmp_string = list(_id)
+        tmp = ''
+        for char in tmp_string:
+            if char == '*':
+                tmp += '[a-z0-9]'
+            else:
+                tmp += char
+        tmp_banned.append(tmp)
+    tmp_ = []
+    #정규표현식과 일치하는 id를 user_id에서 찾아내기
+    for tmp_id,_id in zip(tmp_banned,banned_id):
+        regtmp = re.compile(tmp_id)
+        tmp = []
+        size = len(_id)
+        for user in user_id:
+            #print(size,len(user))
+            if size == len(user):
+                tmp += regtmp.findall(user)
+        tmp_.append(list(set(tmp)))
+    return len(list(set(map(tuple,map(sorted, recur([],[],tmp_))))))
