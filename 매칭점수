@@ -1,0 +1,50 @@
+import re
+def solution(word, pages):
+    word = word.lower()
+    regmeta = re.compile('<meta property.*?>')
+    regbody = re.compile(r'[ \d\W]',re.DOTALL)
+    regouterlink = re.compile('<a href.*?>')
+    infos = []
+    for page in pages:
+        tmp = []
+        meta = regmeta.findall(page)
+        body = regbody.split(page.lower())
+        outer_link = regouterlink.findall(page)
+        if meta:
+            url = re.findall('https.*?"',str(meta))
+            if url:
+                tmp.append(url[0][:len(url[0])-1])
+            else:
+                tmp.append('')
+        if body:
+            count = 0
+            for s in [x for x in body if len(x)]:
+                if s == word:
+                    count += 1
+            tmp.append(count)
+        if outer_link:
+            links = []
+            regurl = re.compile('https.*?"')
+            for link in outer_link:
+                url = regurl.findall(link)
+                if url:
+                    links.append(url[0][:len(url[0])-1])
+            tmp.append(links)
+            if links:
+                tmp.append(float(tmp[1])/float(len(links)))
+            else:
+                tmp.append(0.0)
+        else:
+            tmp.append([])
+            tmp.append(0.0)
+        tmp.append(0.0)
+        infos.append(tmp)
+    
+    for info in infos:
+        link_score = info[3]
+        if info[2]:
+            for outer_url in info[2]:
+                for i, x in enumerate(infos):
+                    if outer_url == x[0]:
+                        infos[i][-1] += link_score
+    return sorted([[i,float(infos[i][1]) + infos[i][-1]] for i in range(len(infos))],key = lambda x : x[1],reverse = True)[0][0]
