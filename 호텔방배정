@@ -1,0 +1,25 @@
+def solution(k, room_number):
+    room = {}
+    result = []
+    for sequence in room_number:
+        #비어있으면
+        if sequence not in room.keys():
+            room[sequence] = sequence + 1
+            result.append(sequence)
+        #비어있지않으면
+        else:
+            _prev = sequence
+            _next = room[_prev]
+            to_do_list = []
+            while True:
+                #비어있으면
+                if _next not in room.keys():
+                    result.append(_next)
+                    room[_next] = _next + 1
+                    room[_prev] = _next + 1
+                    break
+                else:
+                    room[_prev] = room[_next]
+                    _prev = _next
+                    _next = room[_next]
+    return result
