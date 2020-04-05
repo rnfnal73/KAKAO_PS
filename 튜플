@@ -1,0 +1,12 @@
+import re
+def solution(s):
+    regexp = re.compile(r'{[\d,]+}')
+    regexp2 = re.compile('[\d]+')
+    tmp = s[1:len(s)-1]
+    _list = sorted([list(map(int,regexp2.findall(x[1:len(x)-1]))) for x in regexp.findall(tmp)], key = lambda x : len(x))
+    result = []
+    for x in _list:
+        for item in x:
+            if item not in result:
+                result.append(item)
+    return result
