@@ -1,0 +1,27 @@
+import re
+def solution(stones, k):
+    count = 0
+    regzero = re.compile('[0]+')
+    start = 0
+    end = max(stones)
+    mid = (start + end + 1) // 2
+    result = -1
+    if min(stones) == end:
+        return end
+    while True:
+        mid_value = mid
+        tmp = [x - mid_value if x >= mid_value else 0 for x in stones]
+        zeros = regzero.findall(''.join(list(map(str,tmp))))
+        if zeros:
+            count_zero = len(max(zeros,key = lambda x: len(x)))
+            if  count_zero >= k:
+                end = mid - 1
+            else:
+                start = mid
+        else:
+            start = mid
+        mid = (start + end + 1) // 2
+        if start == end:
+            result = mid + 1
+            break
+    return result
