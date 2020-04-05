@@ -1,0 +1,57 @@
+import sys
+class Node:
+    def __init__(self,v):
+        self.value = v[0]
+        self.num = v[1]
+        self.left = None
+        self.right = None
+
+    def make_left(self,value):
+        self.left = Node(value)
+
+    def make_right(self,value):
+        self.right = Node(value)
+
+
+class Tree:
+    def __init__(self,value):
+        self.root = Node(value)
+
+    def insert(self,v):
+        tmp = self.root
+        while True:
+            if v[0][0] > tmp.value[0]:
+                if tmp.right:
+                    tmp = tmp.right
+                else:
+                    tmp.make_right(v)
+                    break
+            elif v[0][0] < tmp.value[0]:
+                if tmp.left:
+                    tmp = tmp.left
+                else:
+                    tmp.make_left(v)
+                    break
+
+    def preorder(self,subtree):
+        if subtree:
+            return [subtree.num] + self.preorder(subtree.left) + self.preorder(subtree.right)
+        else:
+            return []
+
+    def postorder(self,subtree):
+        if subtree:
+            return self.postorder(subtree.left) + self.postorder(subtree.right) + [subtree.num]
+        else:
+            return []
+
+
+def solution(nodeinfo):
+    sys.setrecursionlimit(9000)
+    nodeinfo = [[x, i + 1] for i, x in enumerate(nodeinfo)]
+    nodeinfo.sort(key=lambda x: x[0][0])
+    nodeinfo.sort(key=lambda x: x[0][1], reverse=True)
+    tree = Tree(nodeinfo[0])
+    for i in range(1, len(nodeinfo)):
+        tree.insert(nodeinfo[i])
+    return [tree.preorder(tree.root),tree.postorder(tree.root)]
