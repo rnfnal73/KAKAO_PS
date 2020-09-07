@@ -22,3 +22,28 @@ def solution(n, arr1, arr2):
                 tmp += ' '
         decoded.append(tmp)
     return decoded
+    
+    
+    
+    
+    
+    
+    ###############다른 풀이 2020.09.07
+    def solution(n, arr1, arr2):
+    bnry1 = [bin(x)[2:] for x in arr1]
+    bnry2 = [bin(x)[2:] for x in arr2]
+    result = []
+
+    for i in range(n):
+        tmp = ''
+        if len(bnry1[i]) < n:
+            bnry1[i] = '0'*(n-len(bnry1[i])) + bnry1[i]
+        if len(bnry2[i]) < n:
+            bnry2[i] = '0'*(n-len(bnry2[i])) + bnry2[i]
+        for j in range(n):
+            if int(bnry1[i][j]) or int(bnry2[i][j]):
+                tmp += '#'
+            else:
+                tmp += ' '
+        result.append(tmp)
+    return result
