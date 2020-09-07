@@ -56,3 +56,40 @@ def solution(m, n, board):
         blocks += tmp_blocks
         board = down(board,m,n)
     return blocks
+
+
+
+
+############################ 다른 풀이 좀 더 직관적?
+def solution(m, n, board):
+    board = [list(x) for x in board]
+    def down():
+        for j in range(n):
+            col_list = [board[i][j] for i in range(m) if board[i][j] != '#']
+            if len(col_list) != m:
+                col_list = ['#']*(m-len(col_list)) + col_list
+                for i in range(m):
+                    board[i][j] = col_list[i]
+    #recursive
+    def match(i,j):
+        result = []
+        if i < 0 or i >= m or j < 0 or j >= n:
+            pass
+        else:
+            #주변을 탐색
+            if board[i][j]==board[i+1][j]==board[i][j+1]==board[i+1][j+1]!='#':
+                for idx in range(2):
+                    for idx2 in range(2):
+                        result+=[(i+idx,j+idx2)]
+        return result
+    while True:
+        result = []
+        for i in range(m-1):
+            for j in range(n-1):
+                result += match(i,j)
+        if not result:
+            break
+        for i,j in result:
+            board[i][j] = '#'
+        down()
+    return sum([x.count('#') for x in board])
