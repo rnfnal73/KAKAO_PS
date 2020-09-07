@@ -14,3 +14,32 @@ def solution(cacheSize, cities):
             cache.append(city)
             total_time += 5
     return total_time
+    
+    
+    
+    
+    
+   
+  
+  #################  앞뒤로 pop,append할떄 collections.deque 사용하기
+from collections import deque
+def solution(cacheSize, cities):
+    if not cacheSize:
+        return len(cities)*5
+    cities = [city.lower() for city in cities]
+    queue = deque()
+    runtime = 0
+    for city in cities:
+        
+        if city not in queue:
+            runtime += 5
+            if len(queue) == cacheSize:
+                queue.popleft()
+                queue.append(city)
+            else:
+                queue.append(city)
+        else:
+            runtime += 1
+            queue.remove(city)
+            queue.append(city)
+    return runtime
