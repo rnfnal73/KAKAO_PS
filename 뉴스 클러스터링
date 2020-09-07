@@ -1,0 +1,17 @@
+#리스트(list) => 해시테이블(dictionary)을 이용해 시간초과 해결
+import re
+from collections import Counter
+def solution(str1, str2):
+    regexp = re.compile('[a-zA-Z][a-zA-Z]')
+    tmp1 = Counter([str1[i:i+2].lower() for i in range(len(str1)-1) if regexp.match(str1[i:i+2])])
+    tmp2 = Counter([str2[i:i+2].lower() for i in range(len(str2)-1) if regexp.match(str2[i:i+2])])
+    tmp1 = { key:[0,value] for key,value in tmp1.items()} # key:[inter,union]
+    for key,value in tmp2.items():
+        if key in tmp1:
+            tmp1[key][0] = min(tmp1[key][1],value)
+            tmp1[key][1] = max(tmp1[key][1],value)
+        else:
+            tmp1[key] = [0,value]
+    min_value = sum([x[0] for x in tmp1.values()])
+    max_value = sum([x[1] for x in tmp1.values()])
+    return (65536*min_value)//max_value if max_value else 65536
