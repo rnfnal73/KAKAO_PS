@@ -40,3 +40,43 @@ def solution(str):
     for x in divided:
         result.append(compress(x))
     return min(list(map(lambda x : len(x), result)))
+    
+    
+    
+    
+    
+    
+    
+    
+    #############조금 더 짧게
+def solution(string):
+    def compress(n):
+        candid=[]
+        tmp = string
+        result = ''
+        count = 0
+        while True:
+            candid.append(tmp[:n])
+            tmp = tmp[n:]
+            if len(tmp) < n:
+                if tmp:
+                    candid.append(tmp)
+                break
+        for i in range(len(candid)-1):
+            if candid[i] == candid[i+1]:
+                count+=1
+            else:
+                if count!=0:
+                    result += str(count+1)+candid[i]
+                    count = 0
+                else:
+                    result += candid[i]
+        if len(candid[-1]) < n:
+            result+=candid[-1]
+        else:
+            if count !=0:
+                result += str(count+1)+candid[-1]
+            else:
+                result+=candid[-1]
+        return len(result)
+    return min([compress(i) for i in range(1,len(string)+1)])
