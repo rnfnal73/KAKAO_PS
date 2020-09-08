@@ -29,3 +29,35 @@ def solution(relation):
                 tmp_key.remove(key)
         superkey = tmp_key
     return len(candidkey)
+
+
+################# 다시 풀이
+from itertools import combinations
+def solution(relation):
+    attr = len(relation[0])
+    #1개~attr개 까지 조합이 만드는 attr집합이 후보키를 이루는지 조사
+    candid = []
+    for i in range(1,attr+1):
+        for comb in combinations([m for m in range(attr)],i):
+            tmp = []
+            for record in relation:
+                tmp2 = []
+                for j in comb:
+                    tmp2.append(record[j])
+                tmp.append(tuple(tmp2))
+            if len(set(tmp)) == len(tmp):
+                candid.append(set(comb))
+    #set을 이용해 부분집합 구하기
+    result = []
+    candid.sort(key=lambda x:len(x),reverse=True)
+    while candid:
+        poped = candid.pop(0)
+        flag=True
+        for x in candid:
+            if x==poped.intersection(x):
+                flag=False
+                break
+        if flag:
+            result.append(poped)
+    return len(result)
+                    
