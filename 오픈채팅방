@@ -19,3 +19,25 @@ def solution(record):
         elif item[0] == 'Leave':
             returns.append(users[item[1]] + "님이 나갔습니다.")
     return returns
+    
+    
+    ############### 다시 풀이
+    def solution(record):
+    id_dict = {}
+    logs = []
+    for r in record:
+        tmp = r.split()
+        if tmp[0] == 'Enter':
+            id_dict[tmp[1]] = tmp[2]
+            logs.append(['E',tmp[1]])
+        elif tmp[0] == 'Leave':
+            logs.append(['L',tmp[1]])
+        else:
+            id_dict[tmp[1]] = tmp[2]
+    result = []
+    for log in logs:
+        if log[0] == 'E':
+            result.append(id_dict[log[1]]+'님이 들어왔습니다.')
+        elif log[0] == 'L':
+            result.append(id_dict[log[1]]+'님이 나갔습니다.')
+    return result
