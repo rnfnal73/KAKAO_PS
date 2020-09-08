@@ -55,3 +55,53 @@ def solution(nodeinfo):
     for i in range(1, len(nodeinfo)):
         tree.insert(nodeinfo[i])
     return [tree.preorder(tree.root),tree.postorder(tree.root)]
+    
+    
+    
+    
+    
+    
+    
+    ##################### 다시 풀이
+    import sys
+class Node:
+    def __init__(self,node=[-1,[-1,-1]]):
+        self.i = node[0]
+        self.x = node[1][0]
+        self.y = node[1][1]
+        self.left = None
+        self.right = None
+    def add(self,nodes:list=[]):
+        nodes.sort(key=lambda x:x[1][1])
+        self.__init__(nodes.pop())
+        left = [node for node in nodes if node[1][0] < self.x]
+        right = [node for node in nodes if node[1][0] > self.x]
+        if left:
+            self.left = Node()
+            self.left.add(left)
+        if right:
+            self.right = Node()
+            self.right.add(right)
+    def preorder(self,node):
+        mid = [node.i]
+        left,right = [],[]
+        if node.left:
+            left = self.preorder(node.left)
+        if node.right:
+            right = self.preorder(node.right)
+        return mid + left + right
+    def postorder(self,node):
+        mid = [node.i]
+        left,right = [],[]
+        if node.left:
+            left=self.postorder(node.left)
+        if node.right:
+            right=self.postorder(node.right)
+        return left+right+mid
+        
+def solution(nodeinfo):
+    sys.setrecursionlimit(10**5)
+    nodes = list(sorted([[i+1,nodeinfo[i]] for i in range(len(nodeinfo))],key=lambda x:x[1][1]))
+    root = Node()
+    root.add(nodes)
+    return [root.preorder(root),root.postorder(root)]
