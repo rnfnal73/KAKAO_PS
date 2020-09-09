@@ -1,0 +1,41 @@
+import copy
+def solution(key, lock):
+    size_lock = len(lock)
+    size_key = len(key)
+    count = 0
+    for i in range(size_lock):
+        count+=lock[i].count(1)
+    if count==size_lock**2:
+        return True
+    def check(mat):
+        for i in range(size_lock,2*size_lock):
+            for j in range(size_lock,2*size_lock):
+                if mat[i][j]==0:
+                    return False
+        return True
+    def rotate(mat):
+        size = size_key
+        tmp = copy.deepcopy(mat)
+        return [[tmp[i][j] for i in range(size-1,-1,-1)] for j in range(size)]
+    board = [[0 for j in range(3*size_lock)] for i in range(3*size_lock)]
+    for i in range(size_lock):
+        for j in range(size_lock):
+            board[size_lock+i][size_lock+j] = lock[i][j]
+    tmp_keys = [copy.deepcopy(key),rotate(key),rotate(rotate(key)),rotate(rotate(rotate(key)))]
+    for tmp_key in tmp_keys:
+        for x in range(size_lock-size_key,2*size_lock):
+            for y in range(size_lock-size_key,2*size_lock):
+                #x,y=current (0,0)
+                tmp_board = copy.deepcopy(board)
+                for i in range(size_key):
+                    for j in range(size_key):
+                        # (x+i,y+j)=current index
+                        if x+i>=size_lock and x+i<2*size_lock and y+j>=size_lock and y+j<2*size_lock:
+                            if tmp_key[i][j] ^ tmp_board[x+i][y+j]:
+                                tmp_board[x+i][y+j] = 1
+                            elif tmp_key[i][j] and tmp_board[x+i][y+j]:
+                                tmp_board[x+i][y+j]=0
+                if check(tmp_board):
+                    return True
+                
+    return False
