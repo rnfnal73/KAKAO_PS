@@ -21,3 +21,27 @@ def solution(board, moves):
             else:
                 continue
     return count*2
+
+
+
+
+
+######### 새로 풀이
+from collections import deque
+def solution(board, moves):
+    moves = deque(moves)
+    stack,size,count = [],len(board),0
+    while moves:
+        poped = moves.popleft()-1
+        poped_value = 0
+        for i in range(size):
+            if board[i][poped]:
+                board[i][poped], poped_value = 0, board[i][poped]
+                break
+        if stack and poped_value==stack[-1]:
+            stack.pop()
+            count+=1
+        else:
+            if poped_value:
+                stack.append(poped_value)
+    return count*2
