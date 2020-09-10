@@ -1,0 +1,29 @@
+def solution(numbers, hand):
+    result = ""
+    left,right,mid=[7,4,1],[9,6,3],[0,8,5,2]
+    cur_left,cur_right=(-1,0),(1,0)
+    while numbers:
+        num=numbers.pop(0)
+        if num in left:
+            result+="L"
+            cur_left=(-1,left.index(num)+1)
+        elif num in right:
+            result+="R"
+            cur_right=(1,right.index(num)+1)
+        elif num in mid:
+            lx,ly=abs(cur_left[0]),abs(cur_left[1]-mid.index(num))
+            rx,ry=abs(cur_right[0]),abs(cur_right[1]-mid.index(num))
+            if lx+ly==rx+ry:
+                if hand=='left':
+                    result+="L"
+                    cur_left=(0,mid.index(num))
+                elif hand=='right':
+                    result+="R"
+                    cur_right=(0,mid.index(num))
+            elif lx+ly>rx+ry:
+                result+="R"
+                cur_right=(0,mid.index(num))
+            elif lx+ly<rx+ry:
+                result+="L"
+                cur_left=(0,mid.index(num))
+    return result
