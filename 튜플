@@ -10,3 +10,20 @@ def solution(s):
             if item not in result:
                 result.append(item)
     return result
+    
+    
+    
+############### 다른 풀이 (set 이용)
+import re
+def solution(s):
+    sets = sorted([set(re.sub(r',',' ',x[1:-1]).split()) for x in re.findall(r'{.*?}',s[1:-1])],key=lambda x:len(x))
+    prev_set = []
+    result=[]
+    for _set in sets:
+        if prev_set:
+            result.append(list(_set.difference(prev_set))[0])
+            prev_set=_set
+        else:
+            prev_set=_set
+            result.append(list(prev_set)[0])
+    return list(map(int,result))
